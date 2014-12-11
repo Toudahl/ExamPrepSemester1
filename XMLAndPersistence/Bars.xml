@@ -1,0 +1,32 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<bars>
+  <bar name="Mulligans Irish Pub">
+    <address street="Hestetorvet" number="1" zipcode="4000" city="Roskilde" />
+    <phoneNumber>+45 46 36 23 62</phoneNumber>
+    <position longitude="12.344556" latitude="12.233445"/>
+    <openingHours monday="12:00 - 05:00" tuesday="12:00 - 05:00" wednesday="12:00 - 05:00" thursday="12:00 - 05:00" friday="12:00 - 05:00" saturday="12:00 - 06:00" sunday="12:00 - 05:00"/>
+    <type>Irish Bar</type>
+    <imageURL>/Assets/Bars/bar_mulligans.jpg</imageURL>
+    <description>Live music, football, good beer, super service and festive atmosphere in the heart of the town</description>
+  </bar>
+
+  <bar name="Rosie's Bar">
+    <address street="Skomagergade" number="42" zipcode="4000" city="Roskilde" />
+    <phoneNumber>+45 21 76 34 17</phoneNumber>
+    <position longitude="13.344556" latitude="13.233445"/>
+    <openingHours monday="12:00 - 05:00" tuesday="12:00 - 05:00" wednesday="12:00 - 05:00" thursday="12:00 - 05:00" friday="12:00 - 05:00" saturday="12:00 - 06:00" sunday="12:00 - 05:00"/>
+    <type>Irish Bar</type>
+    <imageURL>/Assets/Restaurants/bjergtroldenPICTURE.jpg</imageURL>
+    <description>Very popular bar. Live music great beers.</description>
+  </bar>
+
+  <bar name="Kaffekilden">
+    <address street="Hestetorvet" number="7" zipcode="4000" city="Roskilde" />
+    <phoneNumber>+45 22 76 34 17</phoneNumber>
+    <position longitude="13.344556" latitude="13.233445"/>
+    <openingHours monday="07:30 - 21:00" tuesday="07:30 - 21:00" wednesday="07:30 - 21:00" thursday="07:30 - 21:00" friday="07:30 - 21:00" saturday="10:00 - 17:00" sunday="10:00 - 17:00"/>
+    <type>Traditional Danish</type>
+    <imageURL>/Assets/Bars/bar_kaffekilde.jpg</imageURL>
+    <description>Traditional Danish atmosphere.</description>
+  </bar>
+</bars>
