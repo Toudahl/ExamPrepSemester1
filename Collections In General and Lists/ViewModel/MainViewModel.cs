@@ -2,21 +2,26 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using Windows.Storage;
 using Collections_In_General_and_Lists.Annotations;
 using Collections_In_General_and_Lists.Model;
 using HelperClasses;
 
 namespace Collections_In_General_and_Lists.ViewModel
 {
-    //TODO: MVVM, bindings, Commands and collections
+    //TODO: MVVM, bindings, Commands, collections and persistence
+    [DataContract]
     class MainViewModel: INotifyPropertyChanged
     {
         private List<PersonModel> _listOfPeople;
+        [DataMember]
         private ObservableCollection<PersonModel> _observableListOfPeople;
         private Dictionary<string, List<PersonModel>> _genderDictionary;
         private List<PersonModel> males;
@@ -25,6 +30,10 @@ namespace Collections_In_General_and_Lists.ViewModel
         private PersonModel _selectedPerson;
         private ICommand _removePersonCommand;
         private ICommand _clearObservableListOfPeople;
+        private DataContractSerializer _serializer;
+        private StorageFolder _storageFolder;
+        private ICommand _serializeCommand;
+        private ICommand _deserializeCommand;
 
         public MainViewModel()
         {
@@ -68,30 +77,70 @@ namespace Collections_In_General_and_Lists.ViewModel
             _addPersonCommand = new RelayCommand(AddPerson);
             _removePersonCommand = new RelayCommand(RemovePerson);
             _clearObservableListOfPeople = new RelayCommand(ClearList);
+            _serializeCommand = new RelayCommand(Serialize);
+            _deserializeCommand = new RelayCommand(Deserialize);
 
             #endregion
-
+            
             ObservableListOfPeople = new ObservableCollection<PersonModel>();
+
+            _serializer = new DataContractSerializer(typeof(ObservableCollection<PersonModel>));
+            _storageFolder = ApplicationData.Current.LocalFolder;
+        }
+        //TODO: Method signatures
+        #region Methods used by the commands
+
+        private async void Serialize()
+        {
+            using (Stream stream = await _storageFolder.OpenStreamForWriteAsync("Personmodels.xml", CreationCollisionOption.ReplaceExisting))
+            {
+                _serializer.WriteObject(stream, ObservableListOfPeople);
+            }
         }
 
-        #region Methods used by the commands
+        private async void Deserialize()
+        {
+            using (Stream stream = await _storageFolder.OpenStreamForReadAsync("Personmodels.xml"))
+            {
+                ObservableListOfPeople = (ObservableCollection<PersonModel>)_serializer.ReadObject(stream);
+            }
+        }
 
         private void ClearList()
         {
             ObservableListOfPeople.Clear();
         }
 
+        //TODO: Searching in a collection
         private void RemovePerson()
         {
-            if (ObservableListOfPeople.Contains(SelectedPerson))
+            int index = -1;
+            foreach (var person in ObservableListOfPeople)
             {
-                ObservableListOfPeople.Remove(SelectedPerson);
+                if (person.Name == SelectedPerson.Name)
+                {
+                  index = ObservableListOfPeople.IndexOf(person);
+                }
+            }
+
+            if (index != -1)
+            {
+                ObservableListOfPeople.RemoveAt(index);
             }
         }
 
         private void AddPerson()
         {
-            if (!ObservableListOfPeople.Contains(SelectedPerson))
+            bool personIsAllreadyInList = false;
+            foreach (var person in ObservableListOfPeople)
+            {
+                if (person.Name == SelectedPerson.Name)
+                {
+                    personIsAllreadyInList = true;
+                }
+            }
+
+            if (!personIsAllreadyInList)
             {
                 ObservableListOfPeople.Add(SelectedPerson);
             }
@@ -99,6 +148,7 @@ namespace Collections_In_General_and_Lists.ViewModel
 
         #endregion
 
+        #region The properties for the lists
         public PersonModel SelectedPerson
         {
             get { return _selectedPerson; }
@@ -108,7 +158,7 @@ namespace Collections_In_General_and_Lists.ViewModel
             }
         }
 
-        #region The properties for the lists
+
         public List<PersonModel> ListOfPeople
         {
             get { return _listOfPeople; }
@@ -121,7 +171,7 @@ namespace Collections_In_General_and_Lists.ViewModel
             set
             {
                 _observableListOfPeople = value;
-                //OnPropertyChanged();
+                OnPropertyChanged();
             }
         }
 
@@ -133,7 +183,7 @@ namespace Collections_In_General_and_Lists.ViewModel
         #endregion
 
         #region Commands
-        public ICommand ClearObservableListOfPeople
+        public ICommand ClearObservableListOfPeopleCommand
         {
             get { return _clearObservableListOfPeople; }
             set { _clearObservableListOfPeople = value; }
@@ -150,6 +200,19 @@ namespace Collections_In_General_and_Lists.ViewModel
             get { return _removePersonCommand; }
             set { _removePersonCommand = value; }
         }
+
+        public ICommand SerializeCommand
+        {
+            get { return _serializeCommand; }
+            set { _serializeCommand = value; }
+        }
+
+        public ICommand DeserializeCommand
+        {
+            get { return _deserializeCommand; }
+            set { _deserializeCommand = value; }
+        }
+
         #endregion
 
         #region PropertyChanged

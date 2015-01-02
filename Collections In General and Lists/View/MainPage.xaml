@@ -27,7 +27,9 @@
                 <Button x:Name="button_clearSelection" Content="Clear Selection" Click="button_clearSelection_Click"/>
                 <Button x:Name="button_add" Content="Add" Command="{Binding AddPersonCommand}"/>
                 <Button x:Name="button_remove" Content="Remove" VerticalAlignment="Bottom" Command="{Binding RemovePersonCommand}"/>
-                <Button x:Name="button_clear" Content="Clear list" VerticalAlignment="Bottom" Command="{Binding ClearObservableListOfPeople}"/>
+                <Button x:Name="button_clear" Content="Clear list" VerticalAlignment="Bottom" Command="{Binding ClearObservableListOfPeopleCommand}"/>
+                <Button x:Name="Serialize" Content="Save selection" VerticalAlignment="Bottom" Command="{Binding SerializeCommand}"/>
+                <Button x:Name="Deserialize" Content="Load last saved selection" VerticalAlignment="Bottom" Command="{Binding DeserializeCommand}"/>
             </StackPanel>
         </StackPanel>
 
